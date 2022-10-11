@@ -1,0 +1,66 @@
+#!/usr/bin/env python3
+from ast import main
+import wikipedia as wiki
+import click
+import webbrowser
+
+@click.command()
+@click.argument('query')
+@click.option('--summary', '-s', is_flag=True, help='Show summary of the page')
+@click.option('--content', '-c', is_flag=True, help='Show content of the page')
+@click.option('--url', '-u', is_flag=True, help='Show url of the page')
+@click.option('--coords', '-co', is_flag=True, help='Show coordinates of the page')
+@click.option('--browser', '-b', is_flag=True, help='Open page in browser')
+@click.option('--search', '-se', is_flag=True, help='Search for a page')
+@click.option('--random', '-r', is_flag=True, help='Show random page')
+@click.option('--lang', '-l', default='en', help='Set language of the page')
+@click.option('--limit', '-lt', default=1, help='Set number of pages to show')
+@click.option('--suggest', '-su', is_flag=True, help='Show suggestions for a page')
+@click.option('--categories', '-ca', is_flag=True, help='Show categories of the page')
+@click.option('--links', '-li', is_flag=True, help='Show links of the page')
+@click.option('--images', '-im', is_flag=True, help='Show images of the page')
+@click.option('--references', '-re', is_flag=True, help='Show references of the page')
+
+def main(query, summary, content, url, coords, browser, search, random, lang, limit, suggest, categories, links, images, references):
+    wiki.set_lang(lang)
+    
+    #use underscores instead of spaces
+    query_fixed = query.replace('_', ' ')
+    if summary:
+        print(wiki.summary(query_fixed))
+        
+    if browser:
+        webbrowser.open(wiki.page(query_fixed).url)
+    
+    if content:
+        print(wiki.page(query_fixed).content)
+        
+    if coords:
+        print(wiki.page(query_fixed).coordinates)
+        
+    if url:
+        print(wiki.page(query_fixed).url)
+        
+    if search:
+        print(wiki.search(query_fixed, results=limit))
+        
+    if suggest:
+        print(wiki.suggest(query_fixed))
+        
+    if categories:
+        print(wiki.page(query_fixed).categories)
+        
+    if links:
+        print(wiki.page(query_fixed).links)
+        
+    if random:
+        print(wiki.random(pages=limit))
+    
+    if images:
+        print(wiki.page(query_fixed).images)
+    
+    if references:
+        print(wiki.page(query_fixed).references)
+    
+if __name__ == '__main__':
+    main()
